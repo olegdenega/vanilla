@@ -539,7 +539,7 @@ class VanillaSettingsController extends Gdn_Controller {
      */
     public function editCategory($CategoryID = '') {
         // Check permission
-        $this->permission('Garden.Community.Manage');
+        $this->permission(['Garden.Community.Manage', 'Garden.Settings.Manage'], false);
 
         // Set up models
         $RoleModel = new RoleModel();

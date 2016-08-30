@@ -63,16 +63,7 @@ class CategoryModel extends Gdn_Model {
      */
     public function __construct() {
         parent::__construct('Category');
-        $this->collection = new CategoryCollection();
-        // Inject the calculator dependency.
-        $this->collection->setConfig(Gdn::config());
-        $this->collection->setStaticCalculator(function (&$category) {
-            self::calculate($category);
-        });
-
-        $this->collection->setUserCalculator(function (&$category) {
-            $this->calculateUser($category);
-        });
+        $this->collection = $this->createCollection();
     }
 
     /**
@@ -634,7 +625,7 @@ class CategoryModel extends Gdn_Model {
      * Get a category tree based on, but not including a parent category.
      *
      * @param int|string $id The parent category ID or slug.
-     * @param int $depth The maximum depth of categories.
+     * @param array $options See {@link CategoryCollection::getTree()}.
      * @param string $permission The permission to check to see which categories to get.
      * @return array Returns an array of categories with child categories in the **Children** key.
      */
@@ -2135,6 +2126,31 @@ class CategoryModel extends Gdn_Model {
     public function setJoinUserCategory($joinUserCategory) {
         $this->joinUserCategory = $joinUserCategory;
         return $this;
+    }
+
+    /**
+     * Create a new category collection tied to this model.
+     *
+     * @return CategoryCollection Returns a new collection.
+     */
+    public function createCollection(Gdn_SQLDriver $sql = null, Gdn_Cache $cache = null) {
+        if ($sql === null) {
+            $sql = $this->SQL;
+    }
+        if ($cache === null) {
+            $cache = Gdn::cache();
+        }
+        $collection = new CategoryCollection($sql, $cache);
+        // Inject the calculator dependency.
+        $collection->setConfig(Gdn::config());
+        $collection->setStaticCalculator(function (&$category) {
+            self::calculate($category);
+        });
+
+        $collection->setUserCalculator(function (&$category) {
+            $this->calculateUser($category);
+        });
+        return $collection;
     }
 
     /**
