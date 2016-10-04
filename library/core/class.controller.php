@@ -1410,12 +1410,14 @@ class Gdn_Controller extends Gdn_Pluggable {
             // Remove values that should not be transmitted via api
             $Remove = array('Password', 'HashMethod', 'TransientKey', 'Permissions', 'Attributes', 'AccessToken');
 
+            // Temporarily remove all IP address fields.
+            $Remove[] = 'InsertIPAddress';
+            $Remove[] = 'UpdateIPAddress';
+            $Remove[] = 'LastIPAddress';
+            $Remove[] = 'AllIPAddresses';
+
             // Remove PersonalInfo values for unprivileged requests.
             if (!Gdn::session()->checkPermission('Garden.Moderation.Manage')) {
-                $Remove[] = 'InsertIPAddress';
-                $Remove[] = 'UpdateIPAddress';
-                $Remove[] = 'LastIPAddress';
-                $Remove[] = 'AllIPAddresses';
                 $Remove[] = 'Fingerprint';
                 if (c('Api.Clean.Email', true)) {
                     $Remove[] = 'Email';
