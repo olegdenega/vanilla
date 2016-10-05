@@ -607,8 +607,10 @@ if (!function_exists('dbdecode')) {
 
         $decodedValue = @unserialize($value);
 
-        // IP addresses are binary packed now. Let's convert them from text to binary
-        $decodedValue = ipEncodeRecursive($decodedValue);
+        if (is_array($value) || is_object($value)) {
+            // IP addresses are binary packed now. Let's convert them from text to binary
+            $decodedValue = ipEncodeRecursive($decodedValue);
+        }
 
         return $decodedValue;
     }
@@ -626,9 +628,11 @@ if (!function_exists('dbencode')) {
             return null;
         }
 
-        // IP addresses are binary packed now.
-        // Let's convert them to text so that they can be safely inserted into the text column
-        $value = ipDecodeRecursive($value);
+        if (is_array($value) || is_object($value)) {
+            // IP addresses are binary packed now.
+            // Let's convert them to text so that they can be safely inserted into the text column
+            $value = ipDecodeRecursive($value);
+        }
 
         $encodedValue = serialize($value);
 
@@ -3841,7 +3845,6 @@ if (!function_exists('walkAllRecursive')) {
             if ($currentDepth > $maxDepth) {
                 throw new Exception('Maximum recursion depth exceeded.', 500);
             }
-
             foreach ($input as $key => &$val) {
                 if (is_array($val) || is_object($val)) {
                     call_user_func_array($walker, [&$val, $callback, $key]);
