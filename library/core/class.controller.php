@@ -1466,6 +1466,8 @@ class Gdn_Controller extends Gdn_Pluggable {
 
         $this->sendHeaders();
 
+        $Data = ipDecodeRecursive($Data);
+
         // Check for a special view.
         $ViewLocation = $this->fetchViewLocation(($this->View ? $this->View : $this->RequestMethod).'_'.strtolower($this->deliveryMethod()), false, false, false);
         if (file_exists($ViewLocation)) {

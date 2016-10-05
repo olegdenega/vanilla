@@ -606,13 +606,7 @@ if (!function_exists('dbdecode')) {
         }
 
         // IP addresses are binary packed now. Let's convert them from text to binary
-        walkAllRecursive($value, function(&$val, $key = null, $parent = null) {
-            if (is_string($val)) {
-                if (stringEndsWith($key, 'IPAddress', true) || stringEndsWith($parent, 'IPAddresses', true)) {
-                    $val = ipEncode($val);
-                }
-            }
-        });
+        $value = ipEncodeRecursive($value);
 
         $decodedValue = @unserialize($value);
 
@@ -634,13 +628,7 @@ if (!function_exists('dbencode')) {
 
         // IP addresses are binary packed now.
         // Let's convert them to text so that they can be safely inserted into the text column
-        walkAllRecursive($value, function(&$val, $key = null, $parent = null) {
-            if (is_string($val)) {
-                if (stringEndsWith($key, 'IPAddress', true) || stringEndsWith($parent, 'IPAddresses', true)) {
-                    $val = ipDecode($val);
-                }
-            }
-        });
+        $value = ipDecodeRecursive($value);
 
         $encodedValue = serialize($value);
 
@@ -3833,5 +3821,76 @@ if (!function_exists('urlMatch')) {
         }
 
         return true;
+    }
+}
+
+if (!function_exists('walkAllRecursive')) {
+    /**
+     * Recursively walk through all array elements or object properties.
+     *
+     * @param array|object $input
+     * @param callable $callback
+     */
+    function walkAllRecursive(&$input, $callback) {
+        $currentDepth = 0;
+        $maxDepth = 128;
+
+        $walker = function(&$input, $callback, $parent = null) use (&$walker, &$currentDepth, $maxDepth) {
+            $currentDepth++;
+
+            if ($currentDepth > $maxDepth) {
+                throw new Exception('Maximum recursion depth exceeded.', 500);
+            }
+
+            foreach ($input as $key => &$val) {
+                if (is_array($val) || is_object($val)) {
+                    call_user_func_array($walker, [&$val, $callback, $key]);
+                } else {
+                    call_user_func_array($callback, [&$val, $key, $parent]);
+                }
+            }
+
+            $currentDepth--;
+        };
+
+        call_user_func_array($walker, [&$input, $callback]);
+    }
+}
+
+if (!function_exists('ipEncodeRecursive')) {
+    /**
+     * Recursively walk through all array elements or object properties and encode IP fields.
+     *
+     * @param array|object $input
+     * @return array|object
+     */
+    function ipEncodeRecursive(&$input) {
+        walkAllRecursive($input, function(&$val, $key = null, $parent = null) {
+            if (is_string($val)) {
+                if (stringEndsWith($key, 'IPAddress', true) || stringEndsWith($parent, 'IPAddresses', true)) {
+                    $val = ipEncode($val);
+                }
+            }
+        });
+        return $input;
+    }
+}
+
+if (!function_exists('ipDecodeRecursive')) {
+    /**
+     * Recursively walk through all array elements or object properties and decode IP fields.
+     *
+     * @param array|object $input
+     * @return array|object
+     */
+    function ipDecodeRecursive($input) {
+        walkAllRecursive($input, function(&$val, $key = null, $parent = null) {
+            if (is_string($val)) {
+                if (stringEndsWith($key, 'IPAddress', true) || stringEndsWith($parent, 'IPAddresses', true)) {
+                    $val = ipDecode($val);
+                }
+            }
+        });
+        return $input;
     }
 }
