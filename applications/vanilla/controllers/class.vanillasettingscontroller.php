@@ -987,6 +987,7 @@ class VanillaSettingsController extends Gdn_Controller {
      * Sorting display order of categories.
      */
     public function categoriesTree() {
+        increaseMaxExecutionTime(0);
         // Check permission
         $this->permission(['Garden.Community.Manage', 'Garden.Settings.Manage'], false);
 

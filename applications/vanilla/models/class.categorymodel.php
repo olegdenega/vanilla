@@ -449,7 +449,7 @@ class CategoryModel extends Gdn_Model {
      * we can deprecate/remove this function.
      *
      * @param bool $stopHeadingCalculation
-     * @return CategoryModel 
+     * @return CategoryModel
      */
     public function setStopHeadingsCalculation($stopHeadingCalculation) {
         self::$stopHeadingsCalculation = $stopHeadingCalculation;
@@ -2462,12 +2462,19 @@ class CategoryModel extends Gdn_Model {
     public static function setCache($ID = false, $Data = false) {
         self::instance()->collection->refreshCache((int)$ID);
 
+        Logger::log(Logger::ALERT, __FILE__.':'.__LINE__.'['.date('Y-m-d H:i:s').']');
+
         $Categories = Gdn::cache()->get(self::CACHE_KEY);
+
+        Logger::log(Logger::ALERT, __FILE__.':'.__LINE__.'['.date('Y-m-d H:i:s').']');
+
         self::$Categories = null;
 
         if (!$Categories) {
             return;
         }
+
+        Logger::log(Logger::ALERT, __FILE__.':'.__LINE__.'['.print_r($Categories).']');
 
         // Extract actual category list, remove key if malformed
         if (!$ID || !is_array($Categories) || !array_key_exists('categories', $Categories)) {
