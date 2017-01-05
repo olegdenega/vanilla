@@ -1011,6 +1011,7 @@ class VanillaSettingsController extends Gdn_Controller {
      * Sorting display order of categories.
      */
     public function minimalBug() {
+        CategoryModel::setCache(28, ['Sort' => 16]);
         $this->CategoryModel->rebuildTree(true);
     }
 }
