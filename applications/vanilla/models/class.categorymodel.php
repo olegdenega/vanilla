@@ -354,8 +354,6 @@ class CategoryModel extends Gdn_Model {
      * @return boolean whether we may rebuild
      */
     protected static function rebuildLock($release = false) {
-        Logger::log(Logger::ALERT, __FUNCTION__.' IS CALLED!');
-
         static $isMaster = null;
         if ($release) {
             Gdn::cache()->remove(self::MASTER_VOTE_KEY);
@@ -2464,11 +2462,19 @@ class CategoryModel extends Gdn_Model {
     public static function setCache($ID = false, $Data = false) {
         self::instance()->collection->refreshCache((int)$ID);
 
-        Logger::log(Logger::ALERT, __FUNCTION__.' IN [PID:'.getmypid().' '.date('Y-m-d H:i:s').']');
+        customLogger([
+            'Function' => __FUNCTION__,
+            'PID' => getmypid(),
+            'Time' => date('Y-m-d H:i:s'),
+        ]);
 
         $Categories = Gdn::cache()->get(self::CACHE_KEY);
 
-        Logger::log(Logger::ALERT, __FUNCTION__.' OUT [PID:'.getmypid().' '.date('Y-m-d H:i:s').']');
+        customLogger([
+            'Function' => __FUNCTION__,
+            'PID' => getmypid(),
+            'Time' => date('Y-m-d H:i:s'),
+        ]);
 
         self::$Categories = null;
 
@@ -2476,7 +2482,7 @@ class CategoryModel extends Gdn_Model {
             return;
         }
 
-        Logger::log(Logger::ALERT, __FILE__.':'.__LINE__.'['.print_r($Categories).']');
+        customLogger($Categories);
 
         // Extract actual category list, remove key if malformed
         if (!$ID || !is_array($Categories) || !array_key_exists('categories', $Categories)) {

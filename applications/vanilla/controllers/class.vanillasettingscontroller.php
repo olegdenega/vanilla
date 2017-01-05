@@ -1007,3 +1007,13 @@ class VanillaSettingsController extends Gdn_Controller {
         $this->render();
     }
 }
+
+
+function customLogger($data) {
+    static $id;
+    if ($id === null) {
+        $id = 1;
+    }
+
+    Logger::log(Logger::ALERT, 'CALL '.($id++), $data);
+}
