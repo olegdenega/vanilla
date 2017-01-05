@@ -647,6 +647,13 @@ class CategoryCollection {
      */
     public function refreshCache($categoryID) {
         $category = $this->sql->getWhere('Category', ['CategoryID' => $categoryID])->firstRow(DATASET_TYPE_ARRAY);
+
+        customLogger([
+            'Function' => __FUNCTION__,
+            'Time' => date('Y-m-d H:i:s'),
+            'Category' => $category,
+        ]);
+
         if ($category) {
             $this->calculateStatic($category);
             $this->cache->store(
