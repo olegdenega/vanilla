@@ -2464,7 +2464,6 @@ class CategoryModel extends Gdn_Model {
 
         customLogger([
             'Function' => __FUNCTION__,
-            'PID' => getmypid(),
             'Time' => date('Y-m-d H:i:s'),
         ]);
 
@@ -2472,7 +2471,6 @@ class CategoryModel extends Gdn_Model {
 
         customLogger([
             'Function' => __FUNCTION__,
-            'PID' => getmypid(),
             'Time' => date('Y-m-d H:i:s'),
         ]);
 

@@ -1015,5 +1015,5 @@ function customLogger($data) {
         $id = 1;
     }
 
-    Logger::log(Logger::ALERT, 'CALL '.($id++), $data);
+    Logger::log(Logger::ALERT, 'PID:'.getmypid().' CALL '.($id++), $data);
 }
