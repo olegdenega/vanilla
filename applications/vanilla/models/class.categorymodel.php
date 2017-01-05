@@ -2460,11 +2460,20 @@ class CategoryModel extends Gdn_Model {
      * @param array|bool $Data
      */
     public static function setCache($ID = false, $Data = false) {
+
+        customLogger([
+            'Function' => __FUNCTION__,
+            'Time' => date('Y-m-d H:i:s'),
+            'ID' => $ID,
+            'Data' => $Data,
+        ]);
+
         self::instance()->collection->refreshCache((int)$ID);
 
         customLogger([
             'Function' => __FUNCTION__,
             'Time' => date('Y-m-d H:i:s'),
+            'Info' => 'Before getcache',
         ]);
 
         $Categories = Gdn::cache()->get(self::CACHE_KEY);
@@ -2472,6 +2481,7 @@ class CategoryModel extends Gdn_Model {
         customLogger([
             'Function' => __FUNCTION__,
             'Time' => date('Y-m-d H:i:s'),
+            'Info' => 'After getcache',
         ]);
 
         self::$Categories = null;
