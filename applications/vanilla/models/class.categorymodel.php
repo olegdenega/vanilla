@@ -2466,6 +2466,7 @@ class CategoryModel extends Gdn_Model {
             'Time' => date('Y-m-d H:i:s'),
             'ID' => $ID,
             'Data' => $Data,
+            'Backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
         ]);
 
         self::instance()->collection->refreshCache((int)$ID);
