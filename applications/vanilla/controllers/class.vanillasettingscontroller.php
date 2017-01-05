@@ -1006,6 +1006,14 @@ class VanillaSettingsController extends Gdn_Controller {
         // Renders true/false rather than template
         $this->render();
     }
+
+        /**
+     * Sorting display order of categories.
+     */
+    public function minimalBug() {
+        CategoryModel::setCache(28, ['Sort' => 16]);
+        CategoryModel::setCache(false, false);
+    }
 }
 
 
