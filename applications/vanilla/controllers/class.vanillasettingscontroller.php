@@ -990,6 +990,9 @@ class VanillaSettingsController extends Gdn_Controller {
         increaseMaxExecutionTime(0);
         date_default_timezone_set('America/Montreal');
 
+        // Which app server are we ON?
+        customLogger(['SERVER_ADDR' => $_SERVER['SERVER_ADDR']]);
+
         // Check permission
         $this->permission(['Garden.Community.Manage', 'Garden.Settings.Manage'], false);
 
