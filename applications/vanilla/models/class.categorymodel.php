@@ -1990,8 +1990,8 @@ class CategoryModel extends Gdn_Model {
                 );
             }
         }
-//        self::setCache();
-//        $this->collection->flushCache();
+        self::setCache();
+        $this->collection->flushCache();
     }
 
     /**

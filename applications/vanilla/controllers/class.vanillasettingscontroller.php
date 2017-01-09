@@ -989,7 +989,6 @@ class VanillaSettingsController extends Gdn_Controller {
     public function categoriesTree() {
         increaseMaxExecutionTime(0);
         date_default_timezone_set('America/Montreal');
-        customLogger($_SERVER);
 
         // Check permission
         $this->permission(['Garden.Community.Manage', 'Garden.Settings.Manage'], false);
